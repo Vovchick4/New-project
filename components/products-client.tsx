@@ -108,8 +108,8 @@ export default function ProductsClient({ initialProducts }: ProductsClientProps)
         <p className="hero__eyebrow">Next.js + TypeScript</p>
         <h1 className="hero__title">Гнучкий CRUD для ваших товарів</h1>
         <p className="hero__copy">
-          Додавайте, редагуйте й видаляйте товари через API-роути Next.js. Дані зберігаються локально у файлі
-          <strong> data.json</strong>, тож апка проста для запуску й демонстрації.
+          Додавайте, редагуйте й видаляйте товари через API-роути Next.js. Дані зараз зберігаються у тимчасовому
+          файлі середовища, тож апка підходить для демонстрації та тестування CRUD-поведінки.
         </p>
       </section>
 

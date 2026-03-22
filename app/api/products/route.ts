@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createProduct, getProducts } from "@/lib/products";
 import { validateProductInput } from "@/lib/validation";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const products = await getProducts();
   return NextResponse.json(products);
