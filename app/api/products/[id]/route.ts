@@ -22,7 +22,8 @@ export async function PUT(request: Request, context: RouteContext) {
     return NextResponse.json(updated);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Не вдалося оновити товар.";
-    return NextResponse.json({ message }, { status: 400 });
+    const status = message.includes("Vercel") ? 503 : 400;
+    return NextResponse.json({ message }, { status });
   }
 }
 

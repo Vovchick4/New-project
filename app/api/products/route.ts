@@ -15,6 +15,7 @@ export async function POST(request: Request) {
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Не вдалося створити товар.";
-    return NextResponse.json({ message }, { status: 400 });
+    const status = message.includes("Vercel") ? 503 : 400;
+    return NextResponse.json({ message }, { status });
   }
 }

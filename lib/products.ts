@@ -2,7 +2,9 @@ import { promises as fs } from "fs";
 import path from "path";
 import { Product, ProductInput } from "@/types/product";
 
-const dataFilePath = path.join(process.cwd(), "data.json");
+const isVercelRuntime = process.env.VERCEL === "1";
+const tempDir = process.env.TMPDIR || "/tmp";
+const dataFilePath = isVercelRuntime ? path.join(tempDir, "data.json") : path.join(process.cwd(), "data.json");
 
 const defaultProducts: Product[] = [
   {
@@ -35,8 +37,13 @@ async function ensureDataFile() {
 
 async function readProducts(): Promise<Product[]> {
   await ensureDataFile();
-  const raw = await fs.readFile(dataFilePath, "utf8");
-  return JSON.parse(raw) as Product[];
+
+  try {
+    const raw = await fs.readFile(dataFilePath, "utf8");
+    return JSON.parse(raw) as Product[];
+  } catch {
+    return defaultProducts;
+  }
 }
 
 async function writeProducts(products: Product[]) {
