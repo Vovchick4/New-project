@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
+import os from "os";
 import path from "path";
 import { Product, ProductInput } from "@/types/product";
 
-const isVercelRuntime = process.env.VERCEL === "1";
-const tempDir = process.env.TMPDIR || "/tmp";
-const dataFilePath = isVercelRuntime ? path.join(tempDir, "data.json") : path.join(process.cwd(), "data.json");
+const tempDir = process.env.TMPDIR || os.tmpdir();
+const dataFilePath = path.join(tempDir, "data.json");
 
 const defaultProducts: Product[] = [
   {
@@ -14,29 +14,34 @@ const defaultProducts: Product[] = [
     category: "Посуд",
     description: "Керамічна чашка ручного стилю для щоденної кави або чаю.",
     createdAt: new Date("2026-03-20T09:00:00.000Z").toISOString(),
-    updatedAt: new Date("2026-03-20T09:00:00.000Z").toISOString()
+    updatedAt: new Date("2026-03-20T09:00:00.000Z").toISOString(),
   },
   {
     id: "prod-2",
     name: "Блокнот Canvas",
     price: 240,
     category: "Канцелярія",
-    description: "Щільний папір, тканинна обкладинка та приємний мінімалістичний дизайн.",
+    description:
+      "Щільний папір, тканинна обкладинка та приємний мінімалістичний дизайн.",
     createdAt: new Date("2026-03-21T12:30:00.000Z").toISOString(),
-    updatedAt: new Date("2026-03-21T12:30:00.000Z").toISOString()
-  }
+    updatedAt: new Date("2026-03-21T12:30:00.000Z").toISOString(),
+  },
 ];
 
-async function ensureDataFile() {
-  try {
-    await fs.access(dataFilePath);
-  } catch {
-    await fs.writeFile(dataFilePath, JSON.stringify(defaultProducts, null, 2), "utf8");
-  }
-}
+// async function ensureDataFile() {
+//   try {
+//     await fs.access(dataFilePath);
+//   } catch {
+//     await fs.writeFile(
+//       dataFilePath,
+//       JSON.stringify(defaultProducts, null, 2),
+//       "utf8",
+//     );
+//   }
+// }
 
 async function readProducts(): Promise<Product[]> {
-  await ensureDataFile();
+  // await ensureDataFile();
 
   try {
     const raw = await fs.readFile(dataFilePath, "utf8");
@@ -69,7 +74,7 @@ export async function createProduct(input: ProductInput) {
     category: input.category.trim(),
     description: input.description.trim(),
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   };
 
   products.unshift(product);
@@ -92,7 +97,7 @@ export async function updateProduct(id: string, input: ProductInput) {
     price: Number(input.price),
     category: input.category.trim(),
     description: input.description.trim(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
 
   products[index] = updated;
